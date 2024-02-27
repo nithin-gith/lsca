@@ -79,7 +79,7 @@ def hello_world():
 def create_short_link():
     long_link = request.args["link"]
     shortened_link_id = ''.join(random.choices(string.ascii_letters, k=7))
-    shortened_link = f'http://127.0.0.1:5000/{shortened_link_id}'
+    shortened_link = f'http://127.0.0.1:8080/{shortened_link_id}'
     try:
         cur = conn.cursor()
         cur.execute("INSERT INTO links (original_link, shortened_link) VALUES (%s, %s);", (long_link, shortened_link))
@@ -94,7 +94,7 @@ def create_short_link():
 def dynamic_endpoint(item_id):
     ip_address = request.remote_addr
     user_agent = request.headers.get('User-Agent')
-    shortened_link = f'http://127.0.0.1:5000/{item_id}'
+    shortened_link = f'http://127.0.0.1:8080/{item_id}'
     try:
         cur = conn.cursor()
         cur.execute("SELECT * FROM links WHERE shortened_link = (%s);", (shortened_link,))
@@ -110,11 +110,10 @@ def dynamic_endpoint(item_id):
     except psycopg2.Error as e:
         print("Cant redirect to original link", e)
         conn.rollback()
-        conn.close()
         return "Cant redirect to original link"
     
     return redirect(original_link, code = 302)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080)
