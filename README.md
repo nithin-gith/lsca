@@ -22,3 +22,20 @@ touch .env
 ```
 flask run
 ```
+
+## Using Docker
+1. clone the repo
+```
+git clone https://github.com/nithin-gith/lsca
+```
+2. build the image
+```
+docker build -t lsca:latest .
+```
+3. start the container
+```
+docker run -d -p source_port:dest_port lsca:latest
+ex: docker run -d -p 8080:8080 lsca:latest
+```
+all the requests to localhost:source_port will be transfered to dest_port (which is port of container)
+
